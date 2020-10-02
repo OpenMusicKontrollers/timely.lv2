@@ -22,7 +22,6 @@ stages:
     - mkdir build
     - pushd build
     - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR} -DPLUGIN_DEST="${BASE_NAME}-$(cat ../VERSION)/${CI_BUILD_NAME}/${BASE_NAME}" -DCMAKE_CI_BUILD_NAME=${CI_BUILD_NAME} ..
-    - cmake .. # needed for darwin
     - make
     - make install
 
@@ -32,14 +31,6 @@ stages:
 
 .arm_linux_template: &arm_linux_definition
   image: ventosus/arm-linux-gnueabihf
-  <<: *build_definition
-
-.universal_w64_template: &universal_w64_definition
-  image: ventosus/universal-w64-mingw32
-  <<: *build_definition
-
-.universal_apple_template: &universal_apple_definition
-  image: ventosus/universal-apple-darwin
   <<: *build_definition
 
 # building in docker
@@ -54,15 +45,6 @@ arm-linux-gnueabihf:
 
 aarch64-linux-gnu:
   <<: *arm_linux_definition
-
-x86_64-w64-mingw32:
-  <<: *universal_w64_definition
-
-i686-w64-mingw32:
-  <<: *universal_w64_definition
-
-universal-apple-darwin:
-  <<: *universal_apple_definition
 
 pack:
   <<: *variables_definition
